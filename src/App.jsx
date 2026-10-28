@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { calcNetPay } from './lib/salary.js';
 import { simulate } from './lib/simulate.js';
+import { calcCashFlow } from './lib/cashflow.js';
 import Header from './components/Header.jsx';
 import ProfileSection from './components/ProfileSection.jsx';
 import ExpenseSection from './components/ExpenseSection.jsx';
@@ -27,6 +28,7 @@ const DEFAULT_INPUTS = {
   ],
 
   saving: { monthly: 300_000, rate: 3.5 },   // 일반 적금 (연 %)
+  saveLeftover: true,                        // 남는 돈도 일반 적금처럼 모으기
   invest: { monthly: 300_000, rate: 6 },     // 투자 (예상 연 수익률 %)
 
   youth: {
@@ -57,7 +59,11 @@ export default function App() {
 
   // 입력값이 바뀔 때마다 다시 계산 (useMemo: 입력이 같으면 이전 결과 재사용)
   const pay = useMemo(() => calcNetPay(inputs.incomeType, inputs.income), [inputs.incomeType, inputs.income]);
-  const result = useMemo(() => simulate(inputs, pay.annualGross), [inputs, pay.annualGross]);
+  const flow = useMemo(() => calcCashFlow(inputs, pay.net), [inputs, pay.net]);
+  const result = useMemo(
+    () => simulate(inputs, pay.annualGross, flow.leftoverSaved),
+    [inputs, pay.annualGross, flow.leftoverSaved]
+  );
 
   // 화면을 바꿀 때 맨 위로 스크롤
   const go = (next) => {
@@ -82,7 +88,12 @@ export default function App() {
           onInvestChange={(v) => update('invest', v)}
         />
         <YouthProductSection youth={inputs.youth} onChange={(v) => update('youth', v)} annualGross={pay.annualGross} />
-        <CashFlowSection inputs={inputs} net={pay.net} />
+        <CashFlowSection
+          net={pay.net}
+          flow={flow}
+          saveLeftover={inputs.saveLeftover}
+          onToggle={(v) => update('saveLeftover', v)}
+        />
       </main>
       <ResultBar result={result} onOpen={() => go('result')} />
     </div>
