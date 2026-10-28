@@ -60,7 +60,7 @@ export default function CashFlowSection({
         </>
       ) : (
         <p className="hint">
-          체크 안 하면 모아둔 돈{saveLeftover ? '과 남는 돈' : ''}은 입출금 통장에 있다고 보고 이자 없이 계산해요.
+          체크하지 않으면 모아둔 돈{saveLeftover ? '과 남는 돈' : ''}은 입출금 통장에 있다고 보고 이자 없이 계산해요.
         </p>
       )}
     </section>
