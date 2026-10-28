@@ -39,7 +39,7 @@ export default function ProfileSection({ inputs, update, pay }) {
         </span>
       </label>
 
-      <p className="hint" style={{ marginTop: -6 }}>이름·나이는 결과 화면에 "○○님"과 달성 나이를 보여줄 때만 쓰고, 어디에도 저장하지 않아요.</p>
+      <p className="hint" style={{ marginTop: -6 }}>이름·나이는 결과 화면을 출력할때만 사용하고, 어디에도 저장하지 않아요.</p>
 
       <div className="divider" />
 
