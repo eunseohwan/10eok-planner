@@ -8,6 +8,7 @@ import SavingSection from './components/SavingSection.jsx';
 import YouthProductSection from './components/YouthProductSection.jsx';
 import CashFlowSection from './components/CashFlowSection.jsx';
 import ResultBar from './components/ResultBar.jsx';
+import ResultPage from './components/ResultPage.jsx';
 
 // 앱 전체 입력값의 기본값. 금액은 모두 "원" 단위로 저장해요.
 const DEFAULT_INPUTS = {
@@ -49,6 +50,7 @@ const DEFAULT_INPUTS = {
 
 export default function App() {
   const [inputs, setInputs] = useState(DEFAULT_INPUTS);
+  const [view, setView] = useState('input'); // 'input'(입력) | 'result'(결과)
 
   // 최상위 값 하나를 바꿀 때: update('income', 40000000)
   const update = (key, value) => setInputs((prev) => ({ ...prev, [key]: value }));
@@ -56,6 +58,16 @@ export default function App() {
   // 입력값이 바뀔 때마다 다시 계산 (useMemo: 입력이 같으면 이전 결과 재사용)
   const pay = useMemo(() => calcNetPay(inputs.incomeType, inputs.income), [inputs.incomeType, inputs.income]);
   const result = useMemo(() => simulate(inputs, pay.annualGross), [inputs, pay.annualGross]);
+
+  // 화면을 바꿀 때 맨 위로 스크롤
+  const go = (next) => {
+    setView(next);
+    window.scrollTo(0, 0);
+  };
+
+  if (view === 'result') {
+    return <ResultPage result={result} inputs={inputs} update={update} onBack={() => go('input')} />;
+  }
 
   return (
     <div className="app">
@@ -72,7 +84,7 @@ export default function App() {
         <YouthProductSection youth={inputs.youth} onChange={(v) => update('youth', v)} annualGross={pay.annualGross} />
         <CashFlowSection inputs={inputs} net={pay.net} />
       </main>
-      <ResultBar result={result} />
+      <ResultBar result={result} onOpen={() => go('result')} />
     </div>
   );
 }

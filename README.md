@@ -34,6 +34,8 @@ src/
     ResultBar.jsx           하단 결과 바
     MoneyInput.jsx          만 원 단위 금액 입력칸
     BankSheet.jsx           은행 선택 바텀시트
+    ResultPage.jsx          결과 화면
+    AssetChart.jsx          연도별 자산 그래프
   data/
     youthProducts.js  청년 상품 조건 (정책 바뀌면 여기만 수정)
     banks.js          청년미래적금 은행별 우대 조건
@@ -50,5 +52,5 @@ src/
 - [x] 실수령액 계산 (4대보험·소득세)
 - [x] 10억 도달 기간 계산 (적금·투자·청년 상품)
 - [x] 은행 선택 화면 (청년미래적금 우대금리)
-- [ ] 결과 화면 (그래프·연도별 표)
+- [x] 결과 화면 (그래프·연도별 표·자산 구성)
 - [ ] 배포

@@ -86,8 +86,8 @@ export default function BankSheet({ open, initial, ctx, onApply, onSkip }) {
                   <input
                     type="checkbox"
                     checked={isAuto || bonusIds.includes(c.id)}
-                    disabled={isAuto}
-                    onChange={() => toggle(c.id)}
+                    aria-disabled={isAuto}
+                    onChange={() => !isAuto && toggle(c.id)} // 자동 충족 조건은 해제 불가
                   />
                   <span style={{ flex: 1 }}>
                     {c.label}
