@@ -50,7 +50,7 @@ export function simulate(inputs, annualGross) {
       monthly: m,
       months: YOUTH_FUTURE.months,
       // 기본금리 + 은행 우대금리, 비과세
-      rate: (YOUTH_FUTURE.baseRate + calcBonusRate(youth.future.bankId, youth.future.bonusIds, youth.future.customBonus)) / 100,
+      rate: (YOUTH_FUTURE.baseRate + calcBonusRate(youth.future.bankId, youth.future.bonusIds, { annualGross, futureType: youth.future.type })) / 100,
       govMonthly: Math.floor(m * ratio),
     }));
   }

@@ -34,8 +34,7 @@ const DEFAULT_INPUTS = {
       monthly: 500_000,
       type: 'general',           // 'general'(일반형) | 'preferred'(우대형)
       bankId: null,              // 은행 선택 안 하면 null → 기본금리만
-      bonusIds: [],              // 체크한 우대 조건
-      customBonus: 0,            // 조건 정보가 없는 은행: 직접 고른 우대금리(%p)
+      bonusIds: [],              // 직접 체크한 우대 조건 (입력값으로 충족되는 건 자동 계산)
     },
     leap: {                      // 청년도약계좌 (기존 가입자만)
       enabled: false,
@@ -70,7 +69,7 @@ export default function App() {
           onSavingChange={(v) => update('saving', v)}
           onInvestChange={(v) => update('invest', v)}
         />
-        <YouthProductSection youth={inputs.youth} onChange={(v) => update('youth', v)} />
+        <YouthProductSection youth={inputs.youth} onChange={(v) => update('youth', v)} annualGross={pay.annualGross} />
         <CashFlowSection inputs={inputs} net={pay.net} />
       </main>
       <ResultBar result={result} />

@@ -118,3 +118,8 @@ input[type='checkbox'] { width: 22px; height: 22px; accent-color: var(--accent);
 .btn-primary { flex: 2; background: var(--accent); color: #fff; font-weight: 700; }
 .btn-primary:disabled { background: #9ca3af; cursor: not-allowed; }
 .btn-secondary { flex: 1; background: #f1f3f6; color: #374151; }
+.auto-tag {
+  display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: 999px;
+  background: var(--accent-soft); color: var(--accent-dark); font-size: 11px; font-weight: 500; vertical-align: 1px;
+}
+.cond input:disabled { accent-color: var(--accent); opacity: 1; }
