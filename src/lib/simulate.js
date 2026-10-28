@@ -22,7 +22,7 @@ const productTotal = (p) => p.principal + p.interest + p.gov;
 
 /**
  * 목표 금액까지 몇 달 걸리는지 한 달씩 계산해요.
- * - 모아둔 돈 + 남는 돈(leftover): "현금" 통장, cashRate(세후)로 월복리
+ * - 모아둔 돈 + 남는 돈(leftover): 기본은 입출금 통장(0%), 예금통장에 넣으면 cashRate(세후)로 월복리
  * - 적금(여러 개): 각자 금리(세후)로 월복리 근사, 남은 기간이 있으면 만기 후 투자로
  * - 투자: 예상 수익률로 월복리 (세금 미반영)
  * - 청년 상품: 만기 때 받은 돈은 투자로 옮기고, 그 뒤 월 납입액도 투자로 돌려요
@@ -37,7 +37,7 @@ export function simulate(inputs, annualGross, leftover = 0) {
   const investRate = ((invest.rate ?? 0) / 100) / 12;
 
   // 현금 통장: 모아둔 돈 + 매달 남는 돈
-  const cashRate = afterTax(inputs.cashRate);
+  const cashRate = inputs.cashDeposit ? afterTax(inputs.cashRate) : 0; // 입출금 통장이면 이자 0
   let cashBal = startAsset ?? 0;
   const cashMonthly = leftover;
 

@@ -63,7 +63,7 @@ function SavingItem({ item, onChange, onRemove }) {
   );
 }
 
-// ③ 저축·투자: 적금 여러 개 + 투자
+// ③ 저축·투자: 투자 + 적금 여러 개
 export default function SavingSection({ savings, invest, onSavingsChange, onInvestChange }) {
   const update = (id, next) => onSavingsChange(savings.map((s) => (s.id === id ? next : s)));
   const remove = (id) => onSavingsChange(savings.filter((s) => s.id !== id));
@@ -73,23 +73,23 @@ export default function SavingSection({ savings, invest, onSavingsChange, onInve
     <section className="card">
       <h2 className="card-title"><span className="step">3</span>저축 · 투자 (월)</h2>
 
-      {savings.map((s) => (
-        <SavingItem key={s.id} item={s} onChange={(next) => update(s.id, next)} onRemove={() => remove(s.id)} />
-      ))}
-      <button type="button" className="btn-ghost" onClick={add}>+ 적금 추가</button>
-      <p className="hint">적금 이자는 이자소득세 15.4%를 빼고 계산해요.</p>
+      <MoneyInput label="투자" value={invest.monthly} onChange={(v) => onInvestChange({ ...invest, monthly: v })} />
+      <label className="field-col">
+        예상 연 수익률 <strong style={{ color: 'var(--text)' }}>{invest.rate}%</strong>
+        <input
+          type="range" min="0" max="12" step="0.5"
+          value={invest.rate}
+          onChange={(e) => onInvestChange({ ...invest, rate: Number(e.target.value) })}
+        />
+      </label>
+      <p className="hint">투자 수익률은 보장되지 않아요. 예상치로만 계산해요.</p>
 
       <div className="divider" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-        <MoneyInput label="투자" value={invest.monthly} onChange={(v) => onInvestChange({ ...invest, monthly: v })} />
-        <label className="field-col">
-          예상 연 수익률 <strong style={{ color: 'var(--text)' }}>{invest.rate}%</strong>
-          <input
-            type="range" min="0" max="12" step="0.5"
-            value={invest.rate}
-            onChange={(e) => onInvestChange({ ...invest, rate: Number(e.target.value) })}
-          />
-        </label>
-        <p className="hint">투자 수익률은 보장되지 않아요. 예상치로만 계산해요.</p>
+        {savings.map((s) => (
+          <SavingItem key={s.id} item={s} onChange={(next) => update(s.id, next)} onRemove={() => remove(s.id)} />
+        ))}
+        <button type="button" className="btn-ghost" onClick={add}>+ 적금 추가</button>
+        <p className="hint">적금 이자는 이자소득세 15.4%를 빼고 계산해요.</p>
       </div>
     </section>
   );

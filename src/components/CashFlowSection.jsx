@@ -1,7 +1,9 @@
 import { formatWon } from '../lib/format.js';
 
 // 한 달 돈 흐름 + "남는 돈도 모으기" 스위치
-export default function CashFlowSection({ net, flow, saveLeftover, onToggle, cashRate, onCashRateChange }) {
+export default function CashFlowSection({
+  net, flow, saveLeftover, onToggle, cashDeposit, onCashDepositChange, cashRate, onCashRateChange,
+}) {
   const { expenseTotal, savingTotal, left } = flow;
 
   return (
@@ -24,7 +26,7 @@ export default function CashFlowSection({ net, flow, saveLeftover, onToggle, cas
             <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--text)' }}>남는 돈도 모으기</span>
             <span className="hint">
               {saveLeftover
-                ? `매달 ${formatWon(left)}을 아래 금리로 모은다고 계산해요.`
+                ? `매달 ${formatWon(left)}을 모아둔 돈과 같은 통장에 쌓는다고 계산해요.`
                 : '끄면 위에 적은 저축·투자 금액만 계산해요.'}
             </span>
           </span>
@@ -38,15 +40,29 @@ export default function CashFlowSection({ net, flow, saveLeftover, onToggle, cas
         </label>
       )}
 
-      <label className="field-col">
-        모아둔 돈{saveLeftover ? ' · 남는 돈' : ''} 금리 (연) <strong style={{ color: 'var(--text)' }}>{cashRate}%</strong>
-        <input
-          type="range" min="0" max="6" step="0.1"
-          value={cashRate}
-          onChange={(e) => onCashRateChange(Number(e.target.value))}
-        />
+      <label className="cond" style={{ minHeight: 44 }}>
+        <input type="checkbox" checked={cashDeposit} onChange={(e) => onCashDepositChange(e.target.checked)} />
+        <span style={{ flex: 1, fontWeight: 500, color: 'var(--text)' }}>모아둔 돈 예금통장에 넣어두기</span>
       </label>
-      <p className="hint">파킹통장이나 예금에 둔다고 보고, 이자소득세 15.4%를 빼고 계산해요.</p>
+      {cashDeposit ? (
+        <>
+          <label className="field-col">
+            예금 금리 (연) <strong style={{ color: 'var(--text)' }}>{cashRate}%</strong>
+            <input
+              type="range" min="0" max="6" step="0.1"
+              value={cashRate}
+              onChange={(e) => onCashRateChange(Number(e.target.value))}
+            />
+          </label>
+          <p className="hint">
+            모아둔 돈{saveLeftover ? '과 남는 돈' : ''}이 이 금리로 불어나요. 이자소득세 15.4%를 빼고 계산해요.
+          </p>
+        </>
+      ) : (
+        <p className="hint">
+          체크 안 하면 모아둔 돈{saveLeftover ? '과 남는 돈' : ''}은 입출금 통장에 있다고 보고 이자 없이 계산해요.
+        </p>
+      )}
     </section>
   );
 }
