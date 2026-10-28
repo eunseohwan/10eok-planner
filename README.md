@@ -33,10 +33,15 @@ src/
     CashFlowSection.jsx     한 달 돈 흐름
     ResultBar.jsx           하단 결과 바
     MoneyInput.jsx          만 원 단위 금액 입력칸
+    BankSheet.jsx           은행 선택 바텀시트
   data/
     youthProducts.js  청년 상품 조건 (정책 바뀌면 여기만 수정)
+    banks.js          청년미래적금 은행별 우대 조건
+    taxRates.js       4대보험 요율, 소득세 기준
   lib/
     format.js         금액 표시 ("1억 2,000만 원")
+    salary.js         실수령액 계산
+    simulate.js       목표 도달 기간 계산
 ```
 
 ## 진행 상황
@@ -44,6 +49,6 @@ src/
 - [x] 프로젝트 세팅, 입력 화면 뼈대
 - [x] 실수령액 계산 (4대보험·소득세)
 - [x] 10억 도달 기간 계산 (적금·투자·청년 상품)
-- [ ] 은행 선택 화면
+- [x] 은행 선택 화면 (청년미래적금 우대금리)
 - [ ] 결과 화면 (그래프·연도별 표)
 - [ ] 배포

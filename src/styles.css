@@ -83,3 +83,38 @@ input[type='checkbox'] { width: 22px; height: 22px; accent-color: var(--accent);
 .result-bar { position: sticky; bottom: 0; background: var(--card); border-top: 1px solid var(--line); padding: 12px 16px 20px; display: flex; justify-content: space-between; align-items: baseline; }
 .result-bar span { font-size: 13px; color: var(--text-sub); }
 .result-bar strong { font-size: 22px; color: var(--accent-dark); }
+
+/* ---------- 은행 선택 버튼 줄 ---------- */
+.link-row {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  min-height: 52px; padding: 8px 14px; border: 0; border-radius: 10px;
+  background: #f7f8fa; font: inherit; font-size: 18px; color: var(--text-sub); cursor: pointer;
+}
+
+/* ---------- 바텀시트 ---------- */
+.sheet-backdrop {
+  position: fixed; inset: 0; z-index: 10; background: rgba(17, 24, 39, 0.45);
+  display: flex; align-items: flex-end; justify-content: center;
+}
+.sheet {
+  width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto;
+  background: var(--card); border-radius: 20px 20px 0 0; padding: 12px 20px 24px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.sheet-handle { width: 40px; height: 4px; border-radius: 2px; background: var(--input-line); align-self: center; }
+.sheet-box { background: #f7f8fa; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 6px; }
+.bank-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.bank-btn {
+  min-height: 48px; border: 1px solid var(--line); border-radius: 10px; background: var(--card);
+  font: inherit; font-size: 13px; font-weight: 500; color: var(--text); cursor: pointer;
+}
+.bank-btn[aria-pressed='true'] { border: 1.5px solid var(--accent); background: var(--accent-soft); }
+.cond { display: flex; align-items: center; gap: 10px; min-height: 40px; font-size: 14px; color: #374151; cursor: pointer; }
+.cond input { width: 20px; height: 20px; flex-shrink: 0; }
+
+.btn-primary, .btn-secondary {
+  min-height: 52px; border: 0; border-radius: 12px; font: inherit; font-size: 15px; cursor: pointer;
+}
+.btn-primary { flex: 2; background: var(--accent); color: #fff; font-weight: 700; }
+.btn-primary:disabled { background: #9ca3af; cursor: not-allowed; }
+.btn-secondary { flex: 1; background: #f1f3f6; color: #374151; }
