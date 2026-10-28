@@ -105,8 +105,8 @@ export default function AssetChart({ yearly, goal, maturities }) {
         ))}
 
         {/* 청년 상품 만기 */}
-        {maturities.map((m) => (
-          <g key={m.name}>
+        {maturities.map((m, i) => (
+          <g key={`${m.name}-${i}`}>
             <line x1={x(m.month / 12)} x2={x(m.month / 12)} y1={pad.top} y2={pad.top + innerH}
               stroke="var(--text-sub)" strokeWidth="1" strokeDasharray="2 3" />
             <text x={x(m.month / 12) + 4} y={pad.top + innerH - 6} fontSize="10" fill="var(--text-sub)">
