@@ -1,21 +1,20 @@
 import { useEffect, useState } from 'react';
-import { FUTURE_BANKS, calcBonusRate } from '../data/banks.js';
+import { FUTURE_BANKS, calcBonusRate, autoBonusIds } from '../data/banks.js';
 import { YOUTH_FUTURE } from '../data/youthProducts.js';
 
 // 은행 선택 바텀시트 (선택사항)
 // "적용하기"를 눌러야 반영되고, "건너뛰기"를 누르면 기본금리만 써요.
-export default function BankSheet({ open, initial, onApply, onSkip }) {
+// ctx = { annualGross, futureType } → 앞에서 입력한 값으로 충족되는 조건은 자동 체크
+export default function BankSheet({ open, initial, ctx, onApply, onSkip }) {
   // 시트 안에서 고르는 동안은 임시 값으로 들고 있어요
   const [bankId, setBankId] = useState(initial.bankId);
   const [bonusIds, setBonusIds] = useState(initial.bonusIds);
-  const [customBonus, setCustomBonus] = useState(initial.customBonus ?? 0);
 
   // 열릴 때마다 현재 값으로 초기화
   useEffect(() => {
     if (open) {
       setBankId(initial.bankId);
       setBonusIds(initial.bonusIds);
-      setCustomBonus(initial.customBonus ?? 0);
     }
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -30,12 +29,12 @@ export default function BankSheet({ open, initial, onApply, onSkip }) {
   if (!open) return null;
 
   const bank = FUTURE_BANKS.find((b) => b.id === bankId);
-  const bonus = calcBonusRate(bankId, bonusIds, customBonus);
+  const autoIds = autoBonusIds(bankId, ctx);       // 입력값으로 이미 충족된 조건
+  const bonus = calcBonusRate(bankId, bonusIds, ctx);
 
   const pickBank = (id) => {
     setBankId(id);
-    setBonusIds([]);       // 은행 바꾸면 조건 초기화
-    setCustomBonus(0);
+    setBonusIds([]); // 은행 바꾸면 직접 체크한 조건 초기화 (자동 조건은 그대로 계산돼요)
   };
 
   const toggle = (id) =>
@@ -74,37 +73,36 @@ export default function BankSheet({ open, initial, onApply, onSkip }) {
           ))}
         </div>
 
-        {bank && bank.conditions && (
+        {bank && (
           <div className="sheet-box">
             <div className="row">
               <strong>{bank.name} 우대 조건</strong>
               <span className="hint">최대 +{bank.max}%p</span>
             </div>
-            {bank.conditions.map((c) => (
-              <label key={c.id} className="cond">
-                <input type="checkbox" checked={bonusIds.includes(c.id)} onChange={() => toggle(c.id)} />
-                <span style={{ flex: 1 }}>{c.label}</span>
-                <span className="hint">+{c.rate}%p</span>
-              </label>
-            ))}
+            {bank.conditions.map((c) => {
+              const isAuto = autoIds.includes(c.id);
+              return (
+                <label key={c.id} className="cond" style={isAuto ? { cursor: 'default' } : undefined}>
+                  <input
+                    type="checkbox"
+                    checked={isAuto || bonusIds.includes(c.id)}
+                    aria-disabled={isAuto}
+                    onChange={() => !isAuto && toggle(c.id)} // 자동 충족 조건은 해제 불가
+                  />
+                  <span style={{ flex: 1 }}>
+                    {c.label}
+                    {isAuto && <span className="auto-tag">입력값으로 자동 충족</span>}
+                  </span>
+                  <span className="hint">+{c.rate}%p</span>
+                </label>
+              );
+            })}
           </div>
         )}
 
-        {bank && !bank.conditions && (
-          <div className="sheet-box">
-            <label className="field-col">
-              받을 수 있는 우대금리 <strong style={{ color: 'var(--text)' }}>+{customBonus}%p</strong>
-              <input
-                type="range" min="0" max={bank.max} step="0.1"
-                value={customBonus}
-                onChange={(e) => setCustomBonus(Number(e.target.value))}
-              />
-            </label>
-            <p className="hint">
-              이 은행은 세부 조건을 아직 정리하지 못했어요. 은행 앱 상품설명서를 보고 직접 맞춰주세요. (최대 +{bank.max}%p)
-            </p>
-          </div>
-        )}
+        <p className="hint">
+          지금 목록은 우대 조건을 모두 확인한 은행만 보여줘요. 우체국·카카오뱅크·지방은행 등은 조건이 확인되면 추가할게요.
+        </p>
 
         <div className="highlight">
           <span>적용 금리</span>
@@ -119,7 +117,7 @@ export default function BankSheet({ open, initial, onApply, onSkip }) {
           <button
             type="button"
             className="btn-primary"
-            onClick={() => onApply({ bankId, bonusIds, customBonus })}
+            onClick={() => onApply({ bankId, bonusIds })}
             disabled={!bankId}
           >
             적용하기

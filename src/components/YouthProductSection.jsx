@@ -5,12 +5,14 @@ import { YOUTH_FUTURE, YOUTH_LEAP, YOUTH_TOMORROW } from '../data/youthProducts.
 import { FUTURE_BANKS, calcBonusRate } from '../data/banks.js';
 
 // ④ 청년 상품 (모두 선택 입력)
-export default function YouthProductSection({ youth, onChange }) {
+export default function YouthProductSection({ youth, onChange, annualGross }) {
   const { future, leap, tomorrow } = youth;
   const [sheetOpen, setSheetOpen] = useState(false);
 
   const futureBank = FUTURE_BANKS.find((b) => b.id === future.bankId);
-  const futureBonus = calcBonusRate(future.bankId, future.bonusIds, future.customBonus);
+  // 앞에서 입력한 값 (자동 충족 조건 판단용)
+  const bonusCtx = { annualGross, futureType: future.type };
+  const futureBonus = calcBonusRate(future.bankId, future.bonusIds, bonusCtx);
 
   // youth 안의 상품 하나만 바꿀 때: setProduct('future', { monthly: 300000 })
   const setProduct = (key, patch) => onChange({ ...youth, [key]: { ...youth[key], ...patch } });
@@ -132,7 +134,8 @@ export default function YouthProductSection({ youth, onChange }) {
 
       <BankSheet
         open={sheetOpen}
-        initial={{ bankId: future.bankId, bonusIds: future.bonusIds, customBonus: future.customBonus }}
+        initial={{ bankId: future.bankId, bonusIds: future.bonusIds }}
+        ctx={bonusCtx}
         onApply={(v) => { setProduct('future', v); setSheetOpen(false); }}
         onSkip={() => setSheetOpen(false)}
       />
