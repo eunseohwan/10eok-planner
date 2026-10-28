@@ -35,14 +35,14 @@ const DEFAULT_INPUTS = {
       type: 'general',           // 'general'(일반형) | 'preferred'(우대형)
       bankId: null,              // 은행 선택 안 하면 null → 기본금리만
       bonusIds: [],              // 체크한 우대 조건
+      customBonus: 0,            // 조건 정보가 없는 은행: 직접 고른 우대금리(%p)
     },
     leap: {                      // 청년도약계좌 (기존 가입자만)
       enabled: false,
       monthsElapsed: 1,
       balance: null,             // 비우면 자동 추정
       monthly: 400_000,
-      bankId: null,
-      bonusIds: [],
+      rate: 4.5,                 // 이미 정해진 내 금리 (4.5~6.0%)
     },
     tomorrow: { enabled: false }, // 청년내일저축계좌
   },

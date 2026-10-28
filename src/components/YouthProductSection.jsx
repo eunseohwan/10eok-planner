@@ -1,9 +1,16 @@
+import { useState } from 'react';
 import MoneyInput from './MoneyInput.jsx';
+import BankSheet from './BankSheet.jsx';
 import { YOUTH_FUTURE, YOUTH_LEAP, YOUTH_TOMORROW } from '../data/youthProducts.js';
+import { FUTURE_BANKS, calcBonusRate } from '../data/banks.js';
 
 // ④ 청년 상품 (모두 선택 입력)
 export default function YouthProductSection({ youth, onChange }) {
   const { future, leap, tomorrow } = youth;
+  const [sheetOpen, setSheetOpen] = useState(false);
+
+  const futureBank = FUTURE_BANKS.find((b) => b.id === future.bankId);
+  const futureBonus = calcBonusRate(future.bankId, future.bonusIds, future.customBonus);
 
   // youth 안의 상품 하나만 바꿀 때: setProduct('future', { monthly: 300000 })
   const setProduct = (key, patch) => onChange({ ...youth, [key]: { ...youth[key], ...patch } });
@@ -41,8 +48,17 @@ export default function YouthProductSection({ youth, onChange }) {
               </button>
             </div>
             <p className="hint">우대형: {YOUTH_FUTURE.preferredCondition}</p>
-            <button type="button" className="btn-ghost" disabled>은행 선택하고 우대금리 받기 (다음 단계에서 연결)</button>
-            <p className="hint">건너뛰면 기본금리 {YOUTH_FUTURE.baseRate}% 적용</p>
+            <button type="button" className="link-row" onClick={() => setSheetOpen(true)}>
+              <span style={{ display: 'flex', flexDirection: 'column', gap: 2, textAlign: 'left' }}>
+                <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--text)' }}>
+                  {futureBank ? `${futureBank.name} · 연 ${(YOUTH_FUTURE.baseRate + futureBonus).toFixed(1)}%` : '은행 선택하고 우대금리 받기'}
+                </span>
+                <span className="hint">
+                  {futureBank ? `우대 +${futureBonus}%p 적용 중 · 눌러서 변경` : `건너뛰면 기본금리 ${YOUTH_FUTURE.baseRate}% 적용`}
+                </span>
+              </span>
+              <span aria-hidden="true">›</span>
+            </button>
           </>
         )}
       </div>
@@ -80,7 +96,18 @@ export default function YouthProductSection({ youth, onChange }) {
               value={leap.monthly}
               onChange={(v) => setProduct('leap', { monthly: clamp(v, YOUTH_LEAP.maxMonthly) })}
             />
-            <p className="hint">정부 기여금은 입력한 연봉으로 소득 구간을 자동 판단해요.</p>
+            <label className="field-col">
+              내 도약계좌 금리 (연) <strong style={{ color: 'var(--text)' }}>{leap.rate}%</strong>
+              <input
+                type="range" min={YOUTH_LEAP.rateRange[0]} max={YOUTH_LEAP.rateRange[1]} step="0.1"
+                value={leap.rate}
+                onChange={(e) => setProduct('leap', { rate: Number(e.target.value) })}
+              />
+            </label>
+            <p className="hint">
+              이미 가입해서 금리가 정해져 있으니 은행 앱에서 확인한 금리로 맞춰주세요. 모르면 그대로 두면 돼요({YOUTH_LEAP.rateRange[0]}%).
+              정부 기여금은 입력한 연봉으로 소득 구간을 자동 판단해요.
+            </p>
           </>
         )}
       </div>
@@ -102,6 +129,13 @@ export default function YouthProductSection({ youth, onChange }) {
           {YOUTH_TOMORROW.condition}
         </p>
       </div>
+
+      <BankSheet
+        open={sheetOpen}
+        initial={{ bankId: future.bankId, bonusIds: future.bonusIds, customBonus: future.customBonus }}
+        onApply={(v) => { setProduct('future', v); setSheetOpen(false); }}
+        onSkip={() => setSheetOpen(false)}
+      />
     </section>
   );
 }

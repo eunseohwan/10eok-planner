@@ -1,5 +1,6 @@
 import { YOUTH_FUTURE, YOUTH_LEAP, YOUTH_TOMORROW } from '../data/youthProducts.js';
 import { INTEREST_TAX } from '../data/taxRates.js';
+import { calcBonusRate } from '../data/banks.js';
 
 const MAX_MONTHS = 100 * 12; // 100년까지만 계산
 
@@ -48,7 +49,8 @@ export function simulate(inputs, annualGross) {
     products.push(makeProduct({
       monthly: m,
       months: YOUTH_FUTURE.months,
-      rate: (YOUTH_FUTURE.baseRate + (youth.future.bonusRate ?? 0)) / 100, // 비과세
+      // 기본금리 + 은행 우대금리, 비과세
+      rate: (YOUTH_FUTURE.baseRate + calcBonusRate(youth.future.bankId, youth.future.bonusIds, youth.future.customBonus)) / 100,
       govMonthly: Math.floor(m * ratio),
     }));
   }
