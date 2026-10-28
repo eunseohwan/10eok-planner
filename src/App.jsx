@@ -32,7 +32,8 @@ const DEFAULT_INPUTS = {
     { id: 1, name: '일반 적금', monthly: 300_000, rate: 3.5, balance: null, monthsLeft: null },
   ],
   saveLeftover: true,                        // 남는 돈도 모으기
-  cashRate: 3.0,                             // 모아둔 돈 · 남는 돈 금리 (연 %, 세전)
+  cashDeposit: false,                        // 모아둔 돈을 예금통장에 넣어두기 (끄면 입출금 통장 = 0%)
+  cashRate: 3.0,                             // 예금통장 금리 (연 %, 세전)
   invest: { monthly: 300_000, rate: 6 },     // 투자 (예상 연 수익률 %)
 
   youth: {
@@ -97,6 +98,8 @@ export default function App() {
           flow={flow}
           saveLeftover={inputs.saveLeftover}
           onToggle={(v) => update('saveLeftover', v)}
+          cashDeposit={inputs.cashDeposit}
+          onCashDepositChange={(v) => update('cashDeposit', v)}
           cashRate={inputs.cashRate}
           onCashRateChange={(v) => update('cashRate', v)}
         />
