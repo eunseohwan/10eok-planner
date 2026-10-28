@@ -39,15 +39,7 @@ export default function ProfileSection({ inputs, update, pay }) {
         </span>
       </label>
 
-      <div className="field-col">
-        성별
-        <div className="segment" role="group" aria-label="성별">
-          <button type="button" aria-pressed={inputs.gender === 'male'} onClick={() => update('gender', inputs.gender === 'male' ? null : 'male')}>남성</button>
-          <button type="button" aria-pressed={inputs.gender === 'female'} onClick={() => update('gender', inputs.gender === 'female' ? null : 'female')}>여성</button>
-        </div>
-      </div>
-
-      <p className="hint" style={{ marginTop: -6 }}>이름·나이·성별은 결과 화면을 꾸미는 데만 쓰고, 어디에도 저장하지 않아요.</p>
+      <p className="hint" style={{ marginTop: -6 }}>이름·나이는 결과 화면에 "○○님"과 달성 나이를 보여줄 때만 쓰고, 어디에도 저장하지 않아요.</p>
 
       <div className="divider" />
 

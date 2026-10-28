@@ -3,6 +3,7 @@ import AssetChart from './AssetChart.jsx';
 import MoneyInput from './MoneyInput.jsx';
 import { formatWon } from '../lib/format.js';
 import { formatMonths } from '../lib/simulate.js';
+import { goalHeading, ageAt } from '../lib/greeting.js';
 
 // 오늘부터 N개월 뒤 → "2058년 11월"
 function targetDate(months) {
@@ -58,9 +59,14 @@ export default function ResultPage({ result, inputs, update, onBack }) {
       <main className="main">
 
         <section className="hero" aria-live="polite">
-          <p className="hero-sub">목표 {goalText}까지</p>
+          <p className="hero-sub">{goalHeading(inputs.name, inputs.goal)}</p>
           <p className="hero-num">{result.reached ? formatMonths(result.months) : '100년 넘게'}</p>
-          {result.reached && <p className="hero-sub">{targetDate(result.months)}에 달성</p>}
+          {result.reached && (
+            <p className="hero-sub">
+              {targetDate(result.months)}
+              {ageAt(inputs.age, result.months) !== null && `, 만 ${ageAt(inputs.age, result.months)}세`}에 달성
+            </p>
+          )}
           {diff !== 0 && (
             <span className="hero-chip">
               처음 결과보다 {formatMonths(Math.abs(diff))} {diff > 0 ? '빨라졌어요' : '늦어졌어요'}
