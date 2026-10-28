@@ -1,19 +1,8 @@
 import { formatWon } from '../lib/format.js';
-import { YOUTH_TOMORROW } from '../data/youthProducts.js';
 
-// 한 달 돈 흐름: 실수령액 − 고정지출 − 저축·투자 = 남는 돈
-export default function CashFlowSection({ inputs, net }) {
-  const expenseTotal = inputs.expenses.reduce((s, e) => s + (e.amount ?? 0), 0);
-
-  const { future, leap, tomorrow } = inputs.youth;
-  const savingTotal =
-    (inputs.saving.monthly ?? 0) +
-    (inputs.invest.monthly ?? 0) +
-    (future.enabled ? future.monthly ?? 0 : 0) +
-    (leap.enabled ? leap.monthly ?? 0 : 0) +
-    (tomorrow.enabled ? YOUTH_TOMORROW.selfMonthly : 0);
-
-  const left = net - expenseTotal - savingTotal;
+// 한 달 돈 흐름 + "남는 돈도 모으기" 스위치
+export default function CashFlowSection({ net, flow, saveLeftover, onToggle }) {
+  const { expenseTotal, savingTotal, left } = flow;
 
   return (
     <section className="card" style={{ gap: 10 }}>
@@ -24,10 +13,29 @@ export default function CashFlowSection({ inputs, net }) {
       <div className="row total" style={left < 0 ? { color: 'var(--danger)' } : undefined}>
         <span>남는 돈</span><span>{formatWon(left)}</span>
       </div>
-      {left < 0 && (
+
+      {left < 0 ? (
         <p className="hint" role="alert" style={{ color: 'var(--danger)' }}>
-          실수령액보다 쓰는 돈이 많아요. 지출이나 저축 금액을 줄여주세요.
+          실수령액보다 쓰는 돈이 많아요. 지출이나 저축 금액을 줄여주세요. 계산에서는 남는 돈을 0원으로 봐요.
         </p>
+      ) : (
+        <label className="toggle-row">
+          <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--text)' }}>남는 돈도 모으기</span>
+            <span className="hint">
+              {saveLeftover
+                ? `매달 ${formatWon(left)}을 일반 적금 금리로 모은다고 계산해요.`
+                : '끄면 위에 적은 저축·투자 금액만 계산해요.'}
+            </span>
+          </span>
+          <input
+            type="checkbox"
+            role="switch"
+            className="switch"
+            checked={saveLeftover}
+            onChange={(e) => onToggle(e.target.checked)}
+          />
+        </label>
       )}
     </section>
   );

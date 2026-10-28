@@ -44,6 +44,7 @@ src/
     format.js         금액 표시 ("1억 2,000만 원")
     salary.js         실수령액 계산
     simulate.js       목표 도달 기간 계산
+    cashflow.js       한 달 돈 흐름 (남는 돈)
 ```
 
 ## 진행 상황

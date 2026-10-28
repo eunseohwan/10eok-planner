@@ -26,8 +26,9 @@ const productTotal = (p) => p.principal + p.interest + p.gov;
  * - 일반 적금: 세후 금리로 월복리 근사
  * - 투자: 예상 수익률로 월복리 (세금 미반영)
  * - 청년 상품: 만기 때 받은 돈은 투자로 옮기고, 그 뒤 월 납입액도 투자로 돌려요
+ * - 남는 돈(leftover): 일반 적금에 더해서 같은 세후 금리로 모아요
  */
-export function simulate(inputs, annualGross) {
+export function simulate(inputs, annualGross, leftover = 0) {
   const { saving, invest, youth, goal, startAsset } = inputs;
 
   // 목표 금액이 비어 있으면 계산하지 않아요
@@ -38,7 +39,7 @@ export function simulate(inputs, annualGross) {
 
   let savingBal = startAsset ?? 0;
   let investBal = 0;
-  let savingMonthly = saving.monthly ?? 0;
+  let savingMonthly = (saving.monthly ?? 0) + leftover; // 남는 돈도 적금처럼
   let investMonthly = invest.monthly ?? 0;
 
   const products = [];
