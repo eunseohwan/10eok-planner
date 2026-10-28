@@ -45,6 +45,7 @@ src/
     salary.js         실수령액 계산
     simulate.js       목표 도달 기간 계산
     cashflow.js       한 달 돈 흐름 (남는 돈)
+    greeting.js       "○○님, 10억까지" 문구와 달성 나이
 ```
 
 ## 진행 상황
