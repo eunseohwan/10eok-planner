@@ -1,0 +1,6 @@
+# 모든 검색 로봇 허용
+User-agent: *
+Allow: /
+
+# TODO: 도메인이 생기면 아래 줄을 추가
+# Sitemap: https://도메인/sitemap.xml

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import AssetChart from './AssetChart.jsx';
+import Footer from './Footer.jsx';
 import MoneyInput from './MoneyInput.jsx';
 import { formatWon } from '../lib/format.js';
 import { formatMonths } from '../lib/simulate.js';
@@ -155,6 +156,7 @@ export default function ResultPage({ result, inputs, update, onBack }) {
           </ul>
         </section>
       </main>
+      <Footer />
     </div>
   );
 }

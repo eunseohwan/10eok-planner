@@ -3,14 +3,41 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="연봉, 고정지출, 적금·투자, 청년 상품을 넣으면 10억까지 몇 년 걸리는지 계산해줘요." />
     <title>10억 플래너 – 내 월급으로 10억까지 몇 년?</title>
+    <meta name="description" content="연봉 실수령액, 고정지출, 적금·투자, 청년미래적금·청년도약계좌·청년내일저축계좌를 넣으면 10억(목표 금액)까지 몇 년 걸리는지 계산해줘요." />
+    <meta name="keywords" content="10억 모으기, 실수령액 계산기, 청년미래적금 계산기, 청년도약계좌, 청년내일저축계좌, 저축 계산기, 목표 금액 계산" />
+    <meta name="theme-color" content="#1E3A8A" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- 카톡·인스타 등에 링크를 공유할 때 보이는 미리보기 -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:site_name" content="10억 플래너" />
+    <meta property="og:title" content="10억 플래너 – 내 월급으로 10억까지 몇 년?" />
+    <meta property="og:description" content="연봉, 지출, 적금·투자, 청년 상품을 넣으면 10억까지 걸리는 기간을 계산해줘요." />
+    <!-- TODO: 도메인이 생기면 og:url, og:image(절대 주소), canonical 추가 -->
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet" />
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- 앱이 뜨기 전에 보이는 내용 (JavaScript를 못 읽는 검색 로봇도 이 글자를 읽어요). React가 시작되면 사라져요. -->
+      <main style="max-width:480px;margin:0 auto;padding:28px 20px;font-family:sans-serif;color:#111827">
+        <h1>10억 플래너 – 내 월급으로 10억까지 몇 년?</h1>
+        <p>연봉(또는 월급)을 넣으면 4대보험과 소득세를 뺀 월 실수령액을 계산하고, 고정지출과 적금·투자 금액을 반영해 목표 금액까지 걸리는 기간을 알려줘요.</p>
+        <h2>반영하는 것</h2>
+        <ul>
+          <li>2026년 4대보험 요율과 근로소득세로 계산한 실수령액</li>
+          <li>월세·식비 등 고정지출, 남는 돈</li>
+          <li>적금 여러 개(금리·만기), 투자 예상 수익률</li>
+          <li>청년미래적금(일반형·우대형, 은행별 우대금리), 청년도약계좌, 청년내일저축계좌</li>
+        </ul>
+        <p>계산 결과는 참고용이에요. 입력한 값은 어디에도 저장하지 않아요.</p>
+        <p><a href="/privacy.html">개인정보처리방침</a></p>
+      </main>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
