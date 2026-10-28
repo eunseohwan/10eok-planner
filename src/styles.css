@@ -1,0 +1,85 @@
+/* ---------- 색과 기본값 ---------- */
+:root {
+  --bg: #f4f6f9;
+  --card: #ffffff;
+  --text: #111827;
+  --text-sub: #4b5563;
+  --line: #e5e7eb;
+  --input-line: #d1d5db;
+  --accent: #1d4ed8;
+  --accent-dark: #1e3a8a;
+  --accent-soft: #eef3ff;
+  --warn-bg: #fff4e5;
+  --warn-text: #6b3400;
+  --danger: #b91c1c;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans KR', system-ui, sans-serif;
+}
+
+/* ---------- 전체 레이아웃 ---------- */
+.app { max-width: 480px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
+.main { padding: 16px; display: flex; flex-direction: column; gap: 14px; flex-grow: 1; }
+
+.header { padding: 28px 20px 20px; background: var(--card); border-bottom: 1px solid var(--line); }
+.header h1 { margin: 0; font-size: 26px; font-weight: 800; letter-spacing: -0.5px; }
+.header p { margin: 6px 0 0; font-size: 15px; color: var(--text-sub); }
+
+/* ---------- 카드(섹션) ---------- */
+.card { background: var(--card); border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+.card-title { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 17px; font-weight: 700; }
+.step { width: 24px; height: 24px; border-radius: 12px; background: var(--accent); color: #fff; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; }
+.badge { margin-left: auto; font-size: 12px; font-weight: 400; color: var(--text-sub); background: #f1f3f6; border-radius: 999px; padding: 4px 10px; }
+.divider { border-top: 1px solid var(--line); padding-top: 12px; }
+.hint { margin: 0; font-size: 12px; color: var(--text-sub); line-height: 1.5; }
+
+/* ---------- 입력 ---------- */
+.field { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 14px; color: #374151; }
+.field-col { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--text-sub); }
+.input-wrap { display: flex; align-items: center; gap: 6px; }
+.input {
+  height: 44px; width: 130px; border: 1px solid var(--input-line); border-radius: 10px;
+  padding: 0 12px; font: inherit; font-size: 15px; text-align: right; color: var(--text);
+}
+.input.wide { width: 100%; text-align: left; }
+.input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.unit { font-size: 13px; color: var(--text-sub); min-width: 28px; }
+input[type='range'] { width: 100%; accent-color: var(--accent); }
+input[type='checkbox'] { width: 22px; height: 22px; accent-color: var(--accent); }
+
+/* 연봉/월급, 일반형/우대형 같은 두 개 중 하나 고르기 */
+.segment { display: flex; gap: 6px; background: #f1f3f6; border-radius: 10px; padding: 4px; }
+.segment button {
+  flex: 1; min-height: 40px; border: 0; border-radius: 8px; background: transparent;
+  font: inherit; font-size: 14px; color: var(--text-sub); cursor: pointer;
+}
+.segment button[aria-pressed='true'] { background: var(--card); color: var(--text); font-weight: 700; }
+
+.btn-ghost {
+  min-height: 44px; border: 1px dashed #9ca3af; border-radius: 10px; background: var(--card);
+  font: inherit; font-size: 14px; color: #374151; cursor: pointer;
+}
+.btn-icon { width: 36px; height: 36px; border: 0; background: transparent; color: var(--text-sub); cursor: pointer; font-size: 18px; }
+
+/* ---------- 청년 상품 박스 ---------- */
+.product { border: 1px solid var(--line); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.product.on { border: 1.5px solid var(--accent); }
+.product-head { display: flex; justify-content: space-between; align-items: center; font-size: 15px; font-weight: 700; }
+.warn { display: flex; gap: 10px; background: var(--warn-bg); color: var(--warn-text); border-radius: 10px; padding: 12px 14px; font-size: 12px; line-height: 1.5; }
+
+/* ---------- 요약 줄 ---------- */
+.row { display: flex; justify-content: space-between; font-size: 14px; color: #374151; }
+.row.total { font-size: 15px; font-weight: 700; color: var(--text); border-top: 1px solid var(--line); padding-top: 10px; }
+.highlight { display: flex; justify-content: space-between; align-items: center; background: var(--accent-soft); border-radius: 10px; padding: 12px 14px; font-size: 13px; color: #374151; }
+.highlight strong { font-size: 16px; color: var(--accent-dark); }
+
+/* ---------- 하단 결과 바 ---------- */
+.result-bar { position: sticky; bottom: 0; background: var(--card); border-top: 1px solid var(--line); padding: 12px 16px 20px; display: flex; justify-content: space-between; align-items: baseline; }
+.result-bar span { font-size: 13px; color: var(--text-sub); }
+.result-bar strong { font-size: 22px; color: var(--accent-dark); }
