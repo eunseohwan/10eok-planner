@@ -89,11 +89,6 @@ export default function ResultPage({ result, inputs, update, onBack }) {
               onChange={(e) => update('invest', { ...inputs.invest, rate: Number(e.target.value) })}
             />
           </label>
-          <MoneyInput
-            label="월 적금 금액"
-            value={inputs.saving.monthly}
-            onChange={(v) => update('saving', { ...inputs.saving, monthly: v })}
-          />
           <p className="hint">바꾸면 위 결과가 바로 다시 계산돼요. 입력 화면에도 똑같이 반영돼요.</p>
         </section>
 
@@ -142,9 +137,8 @@ export default function ResultPage({ result, inputs, update, onBack }) {
           <strong>계산 기준</strong>
           <ul>
             <li>실수령액은 1인 가구, 비과세 소득 없음, 연말정산 기준 추정치예요.</li>
-            <li>시작 자산은 적금 금리(세후)로 불어난다고 가정했어요.</li>
-            {inputs.saveLeftover && <li>남는 돈도 매달 일반 적금 금리(세후)로 모은다고 계산했어요.</li>}
-            <li>일반 적금은 이자소득세 15.4%를 뺀 금리로 계산했어요.</li>
+            <li>지금 모아둔 돈{inputs.saveLeftover ? '과 남는 돈' : ''}은 연 {inputs.cashRate}%(세후)로 불어난다고 계산했어요.</li>
+            <li>적금은 각자 금리에서 이자소득세 15.4%를 뺀 금리로 계산했어요. 만기가 있으면 만기 후 투자로 옮겨요.</li>
             <li>투자 수익률은 예상치이고 보장되지 않아요. 세금은 반영하지 않았어요.</li>
             <li>청년 상품이 만기되면 받은 돈과 그 뒤 매달 넣던 돈은 투자로 옮긴다고 가정했어요.</li>
             <li>연봉 인상과 물가 상승은 반영하지 않았어요.</li>

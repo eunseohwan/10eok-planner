@@ -40,6 +40,7 @@ export default function ProfileSection({ inputs, update, pay }) {
       </details>
 
       <MoneyInput wide label="지금 모아둔 돈" value={inputs.startAsset} onChange={(v) => update('startAsset', v)} />
+      <p className="hint" style={{ marginTop: -8 }}>적금·청년 상품에 이미 모인 돈은 빼고 적어주세요. 그건 각 상품에 따로 입력해요.</p>
       <MoneyInput
         wide
         label="목표 금액"

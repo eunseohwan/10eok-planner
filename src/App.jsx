@@ -27,8 +27,12 @@ const DEFAULT_INPUTS = {
     { id: 6, name: '보험 · 구독', amount: 80_000 },
   ],
 
-  saving: { monthly: 300_000, rate: 3.5 },   // 일반 적금 (연 %)
-  saveLeftover: true,                        // 남는 돈도 일반 적금처럼 모으기
+  savings: [                                 // 적금 여러 개
+    // balance: 지금까지 모인 돈(없으면 null), monthsLeft: 남은 개월(없으면 계속)
+    { id: 1, name: '일반 적금', monthly: 300_000, rate: 3.5, balance: null, monthsLeft: null },
+  ],
+  saveLeftover: true,                        // 남는 돈도 모으기
+  cashRate: 3.0,                             // 모아둔 돈 · 남는 돈 금리 (연 %, 세전)
   invest: { monthly: 300_000, rate: 6 },     // 투자 (예상 연 수익률 %)
 
   youth: {
@@ -82,9 +86,9 @@ export default function App() {
         <ProfileSection inputs={inputs} update={update} pay={pay} />
         <ExpenseSection expenses={inputs.expenses} onChange={(v) => update('expenses', v)} />
         <SavingSection
-          saving={inputs.saving}
+          savings={inputs.savings}
           invest={inputs.invest}
-          onSavingChange={(v) => update('saving', v)}
+          onSavingsChange={(v) => update('savings', v)}
           onInvestChange={(v) => update('invest', v)}
         />
         <YouthProductSection youth={inputs.youth} onChange={(v) => update('youth', v)} annualGross={pay.annualGross} />
@@ -93,6 +97,8 @@ export default function App() {
           flow={flow}
           saveLeftover={inputs.saveLeftover}
           onToggle={(v) => update('saveLeftover', v)}
+          cashRate={inputs.cashRate}
+          onCashRateChange={(v) => update('cashRate', v)}
         />
       </main>
       <ResultBar result={result} onOpen={() => go('result')} />

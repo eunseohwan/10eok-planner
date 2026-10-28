@@ -9,7 +9,7 @@ export function calcCashFlow(inputs, net) {
 
   const { future, leap, tomorrow } = inputs.youth;
   const savingTotal =
-    (inputs.saving.monthly ?? 0) +
+    inputs.savings.reduce((s, x) => s + (x.monthly ?? 0), 0) +
     (inputs.invest.monthly ?? 0) +
     (future.enabled ? future.monthly ?? 0 : 0) +
     (leap.enabled ? leap.monthly ?? 0 : 0) +

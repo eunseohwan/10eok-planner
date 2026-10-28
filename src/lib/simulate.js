@@ -22,24 +22,36 @@ const productTotal = (p) => p.principal + p.interest + p.gov;
 
 /**
  * 목표 금액까지 몇 달 걸리는지 한 달씩 계산해요.
- * - 시작 자산: 일반 적금 금리(세후)로 불어난다고 가정
- * - 일반 적금: 세후 금리로 월복리 근사
+ * - 모아둔 돈 + 남는 돈(leftover): "현금" 통장, cashRate(세후)로 월복리
+ * - 적금(여러 개): 각자 금리(세후)로 월복리 근사, 남은 기간이 있으면 만기 후 투자로
  * - 투자: 예상 수익률로 월복리 (세금 미반영)
  * - 청년 상품: 만기 때 받은 돈은 투자로 옮기고, 그 뒤 월 납입액도 투자로 돌려요
- * - 남는 돈(leftover): 일반 적금에 더해서 같은 세후 금리로 모아요
  */
 export function simulate(inputs, annualGross, leftover = 0) {
-  const { saving, invest, youth, goal, startAsset } = inputs;
+  const { savings, invest, youth, goal, startAsset } = inputs;
 
   // 목표 금액이 비어 있으면 계산하지 않아요
   if (!goal || goal <= 0) return { months: 0, reached: false, noGoal: true, yearly: [], maturities: [], breakdown: null };
 
-  const savingRate = ((saving.rate ?? 0) / 100) * (1 - INTEREST_TAX) / 12;
+  const afterTax = (rate) => ((rate ?? 0) / 100) * (1 - INTEREST_TAX) / 12; // 연% → 세후 월 이율
   const investRate = ((invest.rate ?? 0) / 100) / 12;
 
-  let savingBal = startAsset ?? 0;
+  // 현금 통장: 모아둔 돈 + 매달 남는 돈
+  const cashRate = afterTax(inputs.cashRate);
+  let cashBal = startAsset ?? 0;
+  const cashMonthly = leftover;
+
+  // 적금 여러 개: 통장마다 따로 불어나요
+  const accounts = savings.map((x) => ({
+    name: x.name || '적금',
+    bal: x.balance ?? 0,
+    monthly: x.monthly ?? 0,
+    rate: afterTax(x.rate),
+    monthsLeft: x.monthsLeft ?? Infinity, // 비우면 만기 없음
+    done: false,
+  }));
+
   let investBal = 0;
-  let savingMonthly = (saving.monthly ?? 0) + leftover; // 남는 돈도 적금처럼
   let investMonthly = invest.monthly ?? 0;
 
   const products = [];
@@ -82,12 +94,12 @@ export function simulate(inputs, annualGross, leftover = 0) {
     }));
   }
 
-  const start = startAsset ?? 0;
-
-  // 도약계좌 기존 적립분: 원금은 "내가 넣은 돈", 기여금은 "정부 기여금"으로 셈해요
-  let paidIn = 0;  // 시작 이후 내가 넣은 돈 (기존 도약계좌 원금 포함)
+  // 시작 자산 = 모아둔 돈 + 적금·도약계좌에 이미 모인 원금
+  // (도약계좌에 이미 쌓인 기여금은 "정부 기여금"으로 셈해요)
+  let start = (startAsset ?? 0) + accounts.reduce((s, a) => s + a.bal, 0);
+  let paidIn = 0;  // 지금부터 내가 넣는 돈
   let govIn = 0;   // 정부 기여금 누계
-  for (const p of products) { paidIn += p.principal; govIn += p.gov; }
+  for (const p of products) { start += p.principal; govIn += p.gov; }
 
   const maturities = []; // 만기 시점 (그래프 표시용)
 
@@ -100,7 +112,10 @@ export function simulate(inputs, annualGross, leftover = 0) {
     }
   }
 
-  const total = () => savingBal + investBal + products.reduce((s, p) => s + productTotal(p), 0);
+  const total = () =>
+    cashBal + investBal +
+    accounts.reduce((s, a) => s + a.bal, 0) +
+    products.reduce((s, p) => s + productTotal(p), 0);
 
   // 지금 자산을 "시작 자산 / 내가 넣은 돈 / 정부 기여금 / 이자·수익"으로 나눠요
   // 이자·수익 = 총자산 − 나머지 셋 (적금 이자, 청년 상품 이자, 투자 수익을 합친 값)
@@ -119,10 +134,25 @@ export function simulate(inputs, annualGross, leftover = 0) {
   if (total() >= goal) return done(0, true);
 
   for (let month = 1; month <= MAX_MONTHS; month++) {
-    // 일반 적금·투자: 기존 잔액 이자 → 이번 달 납입
-    savingBal = savingBal * (1 + savingRate) + savingMonthly;
+    // 현금·투자: 기존 잔액 이자 → 이번 달 납입
+    cashBal = cashBal * (1 + cashRate) + cashMonthly;
     investBal = investBal * (1 + investRate) + investMonthly;
-    paidIn += savingMonthly + investMonthly;
+    paidIn += cashMonthly + investMonthly;
+
+    // 적금: 통장마다 이자 → 납입 → 만기면 투자로
+    for (const a of accounts) {
+      if (a.done) continue;
+      a.bal = a.bal * (1 + a.rate) + a.monthly;
+      paidIn += a.monthly;
+      a.monthsLeft -= 1;
+      if (a.monthsLeft <= 0) {
+        maturities.push({ name: a.name, month, amount: a.bal });
+        investBal += a.bal;
+        investMonthly += a.monthly;
+        a.bal = 0;
+        a.done = true;
+      }
+    }
 
     for (const p of products) {
       if (p.done) continue;
