@@ -13,6 +13,9 @@ import ResultPage from './components/ResultPage.jsx';
 
 // 앱 전체 입력값의 기본값. 금액은 모두 "원" 단위로 저장해요.
 const DEFAULT_INPUTS = {
+  name: '',                      // 이름 (결과 화면 "○○님"에 사용)
+  age: null,                     // 나이 (만 나이)
+  gender: null,                  // 'male' | 'female' | null(선택 안 함)
   incomeType: 'annual',          // 'annual'(연봉) | 'monthly'(월급)
   income: 36_000_000,            // 세전 연봉 또는 세전 월급
   startAsset: 5_000_000,         // 지금 모아둔 돈

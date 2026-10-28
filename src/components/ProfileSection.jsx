@@ -9,6 +9,48 @@ export default function ProfileSection({ inputs, update, pay }) {
     <section className="card">
       <h2 className="card-title"><span className="step">1</span>내 정보</h2>
 
+      <label className="field-col">
+        이름
+        <input
+          className="input wide"
+          value={inputs.name}
+          placeholder="예: 홍길동"
+          maxLength={20}
+          autoComplete="off"
+          onChange={(e) => update('name', e.target.value)}
+        />
+      </label>
+
+      <label className="field">
+        나이
+        <span className="input-wrap">
+          <input
+            className="input"
+            inputMode="numeric"
+            aria-label="나이 (만 나이)"
+            placeholder="예: 25"
+            value={inputs.age ?? ''}
+            onChange={(e) => {
+              const raw = e.target.value.replace(/[^0-9]/g, '').slice(0, 3);
+              update('age', raw === '' ? null : Math.min(Number(raw), 120));
+            }}
+          />
+          <span className="unit">세</span>
+        </span>
+      </label>
+
+      <div className="field-col">
+        성별
+        <div className="segment" role="group" aria-label="성별">
+          <button type="button" aria-pressed={inputs.gender === 'male'} onClick={() => update('gender', inputs.gender === 'male' ? null : 'male')}>남성</button>
+          <button type="button" aria-pressed={inputs.gender === 'female'} onClick={() => update('gender', inputs.gender === 'female' ? null : 'female')}>여성</button>
+        </div>
+      </div>
+
+      <p className="hint" style={{ marginTop: -6 }}>이름·나이·성별은 결과 화면을 꾸미는 데만 쓰고, 어디에도 저장하지 않아요.</p>
+
+      <div className="divider" />
+
       <div className="segment" role="group" aria-label="소득 입력 방식">
         <button type="button" aria-pressed={isAnnual} onClick={() => update('incomeType', 'annual')}>연봉</button>
         <button type="button" aria-pressed={!isAnnual} onClick={() => update('incomeType', 'monthly')}>월급</button>
