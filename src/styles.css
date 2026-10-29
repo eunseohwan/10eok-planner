@@ -172,3 +172,8 @@ input[type='checkbox'] { width: 22px; height: 22px; accent-color: var(--accent);
 }
 .name-input:hover { border-color: var(--line); }
 .name-input:focus { outline: 2px solid var(--accent); outline-offset: 1px; background: var(--card); }
+
+/* ---------- 푸터 ---------- */
+.site-footer { padding: 8px 20px 24px; text-align: center; font-size: 12px; color: var(--text-sub); line-height: 1.6; }
+.site-footer p { margin: 2px 0; }
+.site-footer a { color: var(--text-sub); }

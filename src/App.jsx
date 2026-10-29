@@ -10,6 +10,7 @@ import YouthProductSection from './components/YouthProductSection.jsx';
 import CashFlowSection from './components/CashFlowSection.jsx';
 import ResultBar from './components/ResultBar.jsx';
 import ResultPage from './components/ResultPage.jsx';
+import Footer from './components/Footer.jsx';
 
 // 앱 전체 입력값의 기본값. 금액은 모두 "원" 단위로 저장해요.
 const DEFAULT_INPUTS = {
@@ -106,6 +107,7 @@ export default function App() {
           onCashRateChange={(v) => update('cashRate', v)}
         />
       </main>
+      <Footer />
       <ResultBar result={result} name={inputs.name} goal={inputs.goal} onOpen={() => go('result')} />
     </div>
   );
